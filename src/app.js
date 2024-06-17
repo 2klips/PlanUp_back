@@ -13,4 +13,4 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use('/', routers);
 
-app.listen(config.host.port);
+app.listen(8080);
