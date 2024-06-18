@@ -4,6 +4,9 @@ const morgan = require("morgan");
 const cors = require("cors");
 const routers = require("./routers");
 const path = require("path");
+// const db = require("./models/db");
+
+// db.connectMongoose();
 
 const app = express();
 app.use(cors());
