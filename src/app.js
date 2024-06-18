@@ -1,5 +1,5 @@
 const express = require("express");
-const config = require("./config");
+const config = require("./config/config");
 const morgan = require("morgan");
 const cors = require("cors");
 const routers = require("./routers");
