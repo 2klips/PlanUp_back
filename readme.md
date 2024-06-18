@@ -6,6 +6,7 @@ Backend/
 │   ├── middleware/             # 미들웨어
 │   ├── models/                 # 데이터베이스 모델
 │   ├── routes/                 # 라우트
+│   ├── services/               # API 호출 등 비즈니스 로직
 │   ├── app.js                  # Express 애플리케이션 설정
 ├── .env                        # 환경 변수 설정 파일
 ├── package.json                # npm 패키지 설정 파일
