@@ -10,10 +10,11 @@ const path = require("path");
 
 const app = express();
 app.use(cors());
-
 app.use(express.json());
-
 app.use(morgan("dev"));
+
 app.use('/', routers);
 
-app.listen(8080);
+app.listen(8080, () => {
+    console.log('Server listening on port 8080');
+});
