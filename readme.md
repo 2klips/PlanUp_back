@@ -1,3 +1,4 @@
+```
 Backend/
 ├── src/
 │   ├── config/                 # 설정 파일
@@ -9,3 +10,6 @@ Backend/
 ├── .env                        # 환경 변수 설정 파일
 ├── package.json                # npm 패키지 설정 파일
 └── README.md                   # 프로젝트 설명 파일
+```
+
+run: npm start
