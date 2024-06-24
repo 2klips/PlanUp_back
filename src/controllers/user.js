@@ -7,6 +7,7 @@ function createJwtToken(id){
     return jwt.sign({id}, config.jwt.secretKey, {expiresIn: config.jwt.expiresInSec});
 }
 
+
 //회원가입
 export async function signup(req, res, next) {
     let {name, userid, password, hp, email, ssn1, ssn2, gender} = req.body;
@@ -15,9 +16,21 @@ export async function signup(req, res, next) {
         return res.status(409).json({message:`${userid}이 이미 있습니다.`});
     }
     password = await bcrypt.hash(password, config.bcrypt.saltRounds);
-    const userId = await authRepository.createUser({name, userid, password, hp, email, ssn1, ssn2, gender});
+    const userInfo = await authRepository.createUser({
+        name,
+        userid, 
+        password, 
+        hp, 
+        email, 
+        zoneCode, 
+        address, 
+        addrDetail, 
+        ssn1, 
+        ssn2, 
+        gender
+    });
     console.log('회원가입완료')
-    res.status(200).json(userId)
+    res.status(200).json(userInfo)
 }
 
 //로그인
@@ -47,7 +60,7 @@ export async function mod_user(req,res,next){
 
 //회원탈퇴
 export async function del_user(req,res,next){
-    const {userid} = req.params
+    const {userid} = req.params;
     // const user = await authRepository.findAll();
     await authRepository.delete_(userid);
     console.log('회원가입 탈퇴 완료')
@@ -56,8 +69,11 @@ export async function del_user(req,res,next){
 
 //내정보 찾기
 export async function me(req,res,next){
-    const {userid} = req.params
-    const myinfo = await authRepository.findByUserId(userid);
+    const {userid} = req.params;
+    const userInfo = await authRepository.findByUserId(userid);
+    if(!user){
+        return res.status(401).json({message: `해당 유저가 존재하지않음`});
+    }
     console.log('내 정보 조회 완료')
-    res.status(200).json(myinfo);
+    res.status(200).json(userInfo);
 }

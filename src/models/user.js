@@ -1,13 +1,25 @@
 import mongoose from 'mongoose';
 import { useVirtualId } from './database.js';
 
-
+// userid,
+// password,
+// email,
+// name,
+// hp,
+// zoneCode,
+// address,
+// addrDetail,
+// rrn1,
+// rrn2,
 const userSchema = new mongoose.Schema({
     name : {type:String,require:true},
     userid : {type:String,require:true},
     password : {type:String,require:true},
     hp : {type:String,require:true},
     email : {type:String,require:true},
+    zoneCode : {type:String,require:true},
+    address : {type:String,require:true},
+    addrDetail : {type:String,require:true},
     ssn1 : {type:String,require:true, maxlength: 6},
     ssn2 : {type:String,require:true, maxlength: 7},
     gender : {type:String,require:true}
