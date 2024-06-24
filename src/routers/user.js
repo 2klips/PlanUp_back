@@ -15,5 +15,9 @@ router.post('/login', authController.login);
 
 router.get('/:userid', authController.me);
 
+// verifyToken
+router.get('/verifyToken', isAuth, req, res => {
+    res.json({ success: true, user: req.user });
+});
 
 export default router

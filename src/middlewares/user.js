@@ -28,7 +28,7 @@ export const isAuth = async (req, res, next) => {
                 console.log('에러3');
                 return res.status(401).json(AUTH_ERROR);
             }
-            req.userId = user.id;
+            req.user = user;
             next();
         }
     );
