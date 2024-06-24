@@ -1,35 +1,35 @@
-const jwt = require('jsonwebtoken');
-const userDB = require('../models/userDB');
-
+import jwt from 'jsonwebtoken';
+import * as authRepository from '../models/user.js';
 
 const AUTH_ERROR = {message: "인증에러"};
 
-
-const isAuth = async (req, res, next) => {
+export const isAuth = async (req, res, next) => {
     const authHeader = req.get('Authorization');
+    console.log(authHeader);
+    
     if(!(authHeader && authHeader.startsWith('Bearer '))){
-        console.log('로그인이 필요합니다');
-        return res.redirect('me/login');;
+        console.log('에러1');
+        return res.status(401).json(AUTH_ERROR);
     }
+
     const token = authHeader.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ message: '토큰이 제공되지 않았습니다.' });
+    }
+    
     jwt.verify(
         token, 'abcd1234%^&*', async(error, decoded) => {
             if(error){
                 console.log('에러2');
-                console.log(error)
                 return res.status(401).json(AUTH_ERROR);
             }
-            const user = await userDB.findById(decoded.id);
+            const user = await authRepository.findById(decoded.id);
             if(!user){
                 console.log('에러3');
                 return res.status(401).json(AUTH_ERROR);
             }
-            req.token = token;
-            req.user = user;
+            req.userId = user.id;
             next();
         }
     );
 }
-
-
-module.exports = {isAuth};
