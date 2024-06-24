@@ -1,8 +1,7 @@
-const express = require('express');
-// const mainRouter = require('./main');
-const userRouter = require('./user');
-const mainRouter = require('./main');
-const todolistRouter = require('./todolist');
+import express from 'express';
+import userRouter from './user';
+import mainRouter from './main';
+import todolistRouter from './todolist';
 
 const router = express.Router();
 
@@ -12,4 +11,5 @@ router.use('/user', userRouter);
 router.use('/list', todolistRouter)
 
 
-module.exports = router;
+
+export default router

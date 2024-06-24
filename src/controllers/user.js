@@ -71,7 +71,7 @@ export async function del_user(req,res,next){
 export async function me(req,res,next){
     const {userid} = req.params;
     const userInfo = await authRepository.findByUserId(userid);
-    if(!user){
+    if(!userInfo){
         return res.status(401).json({message: `해당 유저가 존재하지않음`});
     }
     console.log('내 정보 조회 완료')
