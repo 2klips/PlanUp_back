@@ -1,7 +1,5 @@
 import express from "express";
 import * as authController from '../controllers/user.js';
-import { body } from 'express-validator';
-import { validate } from "../middlewares/validator.js";
 import { isAuth } from '../middlewares/user.js';
 
 const router = express.Router()
@@ -15,9 +13,13 @@ router.post('/login', authController.login);
 
 router.get('/:userid', authController.me);
 
-// verifyToken
-router.get('/verifyToken', isAuth, req, res => {
-    res.json({ success: true, user: req.user });
-});
+router.get('/verifyToken', isAuth
+    , (req, res) => {
+        user = req.user;
+        token = req.token;
+        console.log('verifyToken:', user);
+        res.status(200).json({success: true, user, token});
+    }
+)
 
 export default router
