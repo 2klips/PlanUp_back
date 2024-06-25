@@ -73,7 +73,7 @@ export async function del_user(req,res,next){
     // const user = await authRepository.findAll();
     await authRepository.delete_(userid);
     console.log('회원가입 탈퇴 완료')
-    res.status(204).json({ msg: "successfully deleted" });
+    res.status(204).json({ msg: "회원가입 탈퇴 완료'" });
 }
 
 //내정보 찾기
