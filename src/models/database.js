@@ -1,7 +1,8 @@
 import { config } from "../config/config.js";
 import mongoose from 'mongoose'
 
-
+const uri =config.db.DB_URI;
+const dbName = config.db.DB_NAME;
 
 export async function connectDB(){
    try {
