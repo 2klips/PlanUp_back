@@ -51,11 +51,20 @@ export async function login(req, res, next) {
 //회원정보 수정
 export async function mod_user(req,res,next){
     let {name, userid, password, hp, email, ssn1, ssn2, gender} = req.body;
-    const user = await authRepository.findByOne({userid : userid});
+    const user = await authRepository.findByOne({userid});
     if(!user){
         return res.status(401).json({message: `해당 유저가 존재하지않음`});
     }
-    return user.update({password : password, hp:hp, email:email })
+    return user.update({
+        name:name, 
+        userid:userid, 
+        password : password, 
+        hp:hp, 
+        email:email, 
+        zoneCode:zoneCode, 
+        address:address, 
+        addrDetail:addrDetail,
+    })
 }
 
 //회원탈퇴

@@ -1,7 +1,5 @@
 import express from 'express';
 import * as todolistController from '../controllers/todolist.js';
-import { body } from 'express-validator';
-import { validate } from "../middlewares/validator.js";
 import { isAuth } from '../middlewares/user.js';
 
 const router = express.Router();

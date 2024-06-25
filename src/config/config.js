@@ -12,6 +12,15 @@ function required(key, defaultValue=undefined){
 }
 
 export const config = {
+    db: {
+        DB_URI: required('DB_URI').toString(),
+        DB_NAME: required('DB_NAME').toString(),
+    },
+    // api: {
+    //     API_KEY1: required('API_KEY1').toString(),
+    //     API_KEY2: required('API_KEY2').toString(),
+    // },
+    
     jwt: {
         secretKey: required('JWT_SECRET'),
         expiresInSec: parseInt(required('JWT_EXPIRES_SEC', 172800))
@@ -22,11 +31,4 @@ export const config = {
     host: {
         port: parseInt(required('HOST_PORT', 8080))
     },
-    db: {
-        host: required('DB_HOST'),
-        user: required('DB_USER'),
-        database: required('DB_DATABASE'),
-        password: required('DB_PASSWORD'),
-        port: required('DB_PORT')
-    }
-}
+};

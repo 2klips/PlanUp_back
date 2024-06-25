@@ -2,12 +2,15 @@ import { config } from "../config/config.js";
 import mongoose from 'mongoose'
 
 
-export async function connectDB(){
-   console.log(mongoose.connect(config.db.host))
-   console.log(config.db.database)
-   return mongoose.connect(`${config.db.host}`, { useNewUrlParser: true, useUnifiedTopology: true ,dbName: config.db.database})
-}
 
+export async function connectDB(){
+   try {
+      await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, dbName: dbName});
+      console.log('데이터베이스 연결 성공');
+   } catch (error) {
+      console.error('데이터베이스 연결 실패', error);
+   }
+};
 
 export function useVirtualId(schema){
    schema.virtual('id').get(function(){return this._id.toString()})
