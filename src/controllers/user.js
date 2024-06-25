@@ -45,7 +45,7 @@ export async function login(req, res, next) {
         return res.status(401).json({message: `비밀번호가 틀렸음`});
     }
     const token = createJwtToken(user.id);
-    res.status(200).json({token, userid});
+    res.status(200).json({token, user});
 }
 
 //회원정보 수정

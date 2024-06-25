@@ -11,7 +11,7 @@ router.post('/signup', authController.signup);
 
 router.post('/login', authController.login);
 
-router.get('/get_user', authController.me);
+router.post('/get_user', authController.me);
 
 router.get('/verifyToken', isAuth, (req, res) => {
     const user = req.user; // req.user에서 사용자 정보 가져오기
