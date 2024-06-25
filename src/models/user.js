@@ -22,7 +22,7 @@ const User = mongoose.model('member',userSchema)
 
 // 아이디(userid) 중복검사  // 아이디 찾기 
 export async function findByUserId(userid){
-    return User.findOne({userid});
+    return User.findOne({userid:userid});
 }
 
 // id 중복검사

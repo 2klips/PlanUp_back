@@ -11,15 +11,15 @@ router.post('/signup', authController.signup);
 
 router.post('/login', authController.login);
 
-router.get('/:userid', authController.me);
+router.get('/get_user', authController.me);
 
-router.get('/verifyToken', isAuth
-    , (req, res) => {
-        user = req.user;
-        token = req.token;
-        console.log('verifyToken:', user);
-        res.status(200).json({success: true, user, token});
-    }
-)
+router.get('/verifyToken', isAuth, (req, res) => {
+    const user = req.user; // req.user에서 사용자 정보 가져오기
+    const token = req.token; // req.token에서 토큰 정보 가져오기
+
+    console.log('verifyToken:', user);
+
+    res.status(200).json({ success: true, user, token });
+});
 
 export default router

@@ -1,9 +1,8 @@
 import express from 'express'
 import morgan from 'morgan'
-import fs from 'fs'
 import cors from 'cors'
 import { connectDB } from "./models/database.js";
-import routers from './routers';
+import routers from './routers/index.js';
 import {config}  from './config/config.js';
 
 
