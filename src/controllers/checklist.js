@@ -1,0 +1,58 @@
+import * as checklistRepository from '../models/checklist.js';
+
+// 새로운 Check 리스트 생성
+export async function createChecklist(req, res, next) {
+    const { userid, color, examDate, list } = req.body;
+    console.log( userid, color, examDate, list )
+    const newChecklist = await checklistRepository.createCheckList({ userid, color, examDate, list });
+    console.log("Check 리스트 생성 완료")
+    res.status(201).json(newChecklist);
+}
+
+// 모든 Check 리스트를 가져오기
+export async function getAllChecklist(req, res, next) {
+    const checklists = await checklistRepository.getAll();
+    console.log("모든 Check 리스트를 가져오기")
+    res.status(200).json(checklists);
+}
+
+
+// 특정 유저의 Check 리스트를 가져오기
+export async function getUserChecklist(req,res,next){
+    const { userid } = req.body;
+    const checklists = await checklistRepository.getAllByUserid(userid);
+    console.log(checklists)
+    res.status(200).json(checklists);
+}
+
+// 특정 유저와 날짜의 Check 리스트를 가져오기
+export async function getUserDateChecklist(req,res,next){
+    const { userid, examDate } = req.body;
+    const checklists = await checklistRepository.getAllByUseridnexamDate(userid, examDate);
+    console.log(checklists)
+    res.status(200).json(checklists);
+}
+
+
+// Check 리스트 업데이트
+export async function updateChecklist(req, res, next) {
+    const { id, color, examDate, list } = req.body;
+    const updatedChecklist = await checklistRepository.updateCheckList(id, { color, examDate, list });
+        if (!updatedChecklist) {
+            return res.status(404).json({ message: 'Check 리스트를 찾을 수 없습니다.' });
+        }
+        console.log("Check 리스트 업데이트 완료")
+        res.status(200).json(updatedChecklist);
+}
+
+
+// Check 리스트 삭제
+export async function deleteChecklist(req, res, next) {
+    const { id } = req.body;
+    const deletedChecklist = await checklistRepository.removeCheckList(id);
+        if (!deletedChecklist) {
+            return res.status(404).json({ message: 'Check 리스트를 찾을 수 없습니다.' });
+        }
+        res.status(200).json({ message: 'Check 리스트가 삭제되었습니다.' });
+}
+

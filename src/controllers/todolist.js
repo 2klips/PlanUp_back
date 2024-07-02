@@ -13,7 +13,11 @@ export async function createTodolist(req, res, next) {
 export async function getAllTodolist(req, res, next) {
     const todolists = await todolistRepository.getAll();
     console.log("모든 To-Do 리스트를 가져오기")
-    res.status(200).json(todolists);
+    if(todolists){
+        res.status(200).json(todolists);
+    }else{
+        return res.status(404).json({ message: 'To-Do 리스트를 찾을 수 없습니다.' });
+    }
 }
 
 
