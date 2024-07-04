@@ -15,6 +15,8 @@ router.get('/useriddate', isAuth, checklistController.getUserDateChecklist);
 
 router.put('/update', isAuth, checklistController.updateChecklist);
 
+router.put('/updateCompleted', isAuth, checklistController.updateCompleted);
+
 router.delete('/delete', isAuth, checklistController.deleteChecklist);
 
 

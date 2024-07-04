@@ -1,12 +1,15 @@
-import Mongoose from 'mongoose';
+import Mongoose, { mongo } from 'mongoose';
 import { useVirtualId } from './database.js';
+import mongoose from 'mongoose';
 
 // id 자동으로 생성됨 
 const checkListSchema = new Mongoose.Schema({
-    userid: {type: String, require: true},
+    userid: {type: String, require: true, ref: 'User'},
     color: {type: String, require: true},
     examDate: { type: Date,  require: true},
     list: {type: String, require: true},
+    completed: { type: Boolean, default: false},
+    todoId: {type: mongoose.Schema.Types.ObjectId, ref: 'Todolist'},
     createdAt: { type: Date, default: Date.now }
 })
 
@@ -15,22 +18,26 @@ const CheckList = Mongoose.model('checklist', checkListSchema);
 
 // 모든 리스트를 리턴
 export async function getAll() {
-    return CheckList.find().sort({ createdAt: -1 });
+    return CheckList.find().sort({ completed: 1, createdAt: -1 });
 }
 
 // 해당 아이디에 대한 리스트를 리턴
 export async function getAllByUserid(userid) {
-    return CheckList.find({ userid }).sort({ createdAt: -1 });
+    return CheckList.find({ userid }).sort({ completed: 1, createdAt: -1 });
 }
 
 // 해당 아이디와 날짜에 대한 리스트를 리턴
 export async function getAllByUseridnexamDate(userid, examDate) {
-    return CheckList.find({ userid, examDate }).sort({ createdAt: -1 });
+    return CheckList.find({ userid, examDate }).sort({ completed: 1, createdAt: -1 });
 }
 
 // 새로운 Check 리스트 생성
 export async function createCheckList({ userid, color, examDate, list }) {
-    return new CheckList({ userid, color, examDate, list }).save().then(data => data.userid);
+    return new CheckList({ userid, color, examDate, list, completed, todoId }).save().then(data => data.userid);
+}
+
+export async function updateCompleted(_id, { completed  }) {
+    return CheckList.findByIdAndUpdate(_id, { completed  }, { new: true });
 }
 
 // Check 리스트 업데이트

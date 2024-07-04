@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { useVirtualId } from './database.js';
 
+
 const userSchema = new mongoose.Schema({
     name : {type:String,require:true},
     userid : {type:String,require:true},
@@ -17,8 +18,19 @@ const userSchema = new mongoose.Schema({
 
 useVirtualId(userSchema)
 
+
 const User = mongoose.model('member',userSchema)
 
+
+userSchema.pre('remove', async function(next) {
+    try {
+        // 일정에 연결된 모든 체크리스트를 삭제
+        await Todolist.deleteMany({ userid: this.userid });
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
 
 // 아이디(userid) 중복검사  // 아이디 찾기 
 export async function findByUserId(userid){
