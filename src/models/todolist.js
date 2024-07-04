@@ -12,12 +12,14 @@ const todolistSchema = new Mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 })
 
-todolistSchema.pre('remove', async function(next) {
+todolistSchema.pre('Delete', async function(next) {
     try {
         // 일정에 연결된 모든 체크리스트를 삭제
         await Checklist.deleteMany({ todoId: this._id });
+        console.log(`Deleted checklists for todoId: ${this._id}`, result);
         next();
     } catch (err) {
+        console.error(`Error deleting checklists for todoId: ${this._id}`, err);
         next(err);
     }
 });
@@ -35,6 +37,10 @@ export async function getAllByUserid(userid) {
     return Todolist.find({ userid }).sort({ createdAt: -1 });
 }
 
+export async function findById(_id) {
+    return Todolist.find({ _id });
+}
+
 // 새로운 To-Do 리스트 생성
 export async function createTodolist({ userid, title, text, color, examDate }) {
     return new Todolist({ userid, title, text, color, examDate }).save().then(data => data.id);
@@ -47,5 +53,6 @@ export async function updateTodolist(_id, { title, text, color, examDate }) {
 
 // To-Do 리스트 삭제
 export async function removeTodolist(_id) {
+
     return Todolist.findByIdAndDelete(_id);
 }

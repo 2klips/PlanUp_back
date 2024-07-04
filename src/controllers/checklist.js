@@ -21,7 +21,12 @@ export async function getAllChecklist(req, res, next) {
 export async function getUserChecklist(req,res,next){
     const { userid } = req.user;
     const checklists = await checklistRepository.getAllByUserid(userid);
-    console.log(checklists)
+    res.status(200).json(checklists);
+}
+
+export async function getByTodoId(req,res,next){
+    const { todoId } = req.body;
+    const checklists = await checklistRepository.getAllByTodoID(todoId);
     res.status(200).json(checklists);
 }
 
@@ -29,7 +34,6 @@ export async function getUserChecklist(req,res,next){
 export async function getUserDateChecklist(req,res,next){
     const { userid, examDate } = req.body;
     const checklists = await checklistRepository.getAllByUseridnexamDate(userid, examDate);
-    console.log(checklists)
     res.status(200).json(checklists);
 }
 
