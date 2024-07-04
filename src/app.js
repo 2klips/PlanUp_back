@@ -3,8 +3,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import { connectDB } from './models/database.js';
 import routers from './routers/index.js';
-import scraperRouters from './routers/scraper.js'; // 다른 이름으로 설정
-import userRouter from './routers/user.js'; // 사용자 라우터 추가
+
 import { config } from './config/config.js';
 
 const app = express();
@@ -12,9 +11,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
-app.use('/api', userRouter); // 사용자 라우터 추가
 app.use('/', routers);
-app.use('/scrape', scraperRouters); // 새로운 라우터 추가
+
 
 // 에러 처리 미들웨어
 app.use((err, req, res, next) => {
