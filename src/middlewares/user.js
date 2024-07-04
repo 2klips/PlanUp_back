@@ -8,6 +8,7 @@ export const isAuth = async (req, res, next) => {
     
     if(!(authHeader && authHeader.startsWith('Bearer '))){
         console.log('에러1');
+        console.log(authHeader)
         return res.status(401).json(AUTH_ERROR);
     }
 
@@ -19,7 +20,9 @@ export const isAuth = async (req, res, next) => {
     jwt.verify(
         token, 'abcd1234%^&*', async(error, decoded) => {
             if(error){
+                console.log(token)
                 console.log('에러2');
+                console.error(error);
                 return res.status(401).json(AUTH_ERROR);
             }
             const user = await authRepository.findById(decoded.id);

@@ -2,9 +2,9 @@ import * as checklistRepository from '../models/checklist.js';
 
 // 새로운 Check 리스트 생성
 export async function createChecklist(req, res, next) {
-    const { userid, color, examDate, list } = req.body;
+    const { userid, color, examDate, list, completed, todoId } = req.body;
     console.log( userid, color, examDate, list )
-    const newChecklist = await checklistRepository.createCheckList({ userid, color, examDate, list });
+    const newChecklist = await checklistRepository.createCheckList({ userid, color, examDate, list, completed, todoId });
     console.log("Check 리스트 생성 완료")
     res.status(201).json(newChecklist);
 }
@@ -19,7 +19,7 @@ export async function getAllChecklist(req, res, next) {
 
 // 특정 유저의 Check 리스트를 가져오기
 export async function getUserChecklist(req,res,next){
-    const { userid } = req.body;
+    const { userid } = req.user;
     const checklists = await checklistRepository.getAllByUserid(userid);
     console.log(checklists)
     res.status(200).json(checklists);
@@ -37,12 +37,22 @@ export async function getUserDateChecklist(req,res,next){
 // Check 리스트 업데이트
 export async function updateChecklist(req, res, next) {
     const { id, color, examDate, list } = req.body;
-    const updatedChecklist = await checklistRepository.updateCheckList(id, { color, examDate, list });
+    const updatedChecklist = await checklistRepository.updateCheckList(id, { color, examDate, list});
         if (!updatedChecklist) {
             return res.status(404).json({ message: 'Check 리스트를 찾을 수 없습니다.' });
         }
         console.log("Check 리스트 업데이트 완료")
         res.status(200).json(updatedChecklist);
+}
+
+export async function updateCompleted(req, res, next) {
+    const { id, completed } = req.body;
+    const updateCompleted = await checklistRepository.updateCompleted(id, { completed });
+    if (!updateCompleted) {
+        return res.status(404).json({ message: 'Check 리스트를 찾을 수 없습니다.' });
+    }
+    console.log("Check");
+    res.status(200).json(updateCompleted);
 }
 
 

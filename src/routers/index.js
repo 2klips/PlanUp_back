@@ -9,7 +9,7 @@ const router = express.Router();
 router.use('/recruitment', recruitmentRouter);
 router.use('/user', userRouter);
 router.use('/list', todolistRouter);
-router.use('/list/check', checklistRouter);
+router.use('/checklist', checklistRouter);
 
 
 export default router

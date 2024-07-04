@@ -1,9 +1,10 @@
 import Mongoose from 'mongoose';
 import { useVirtualId } from './database.js';
 
+
 // id 자동으로 생성됨 
 const todolistSchema = new Mongoose.Schema({
-    userid: {type: String, require: true},
+    userid: {type: String, require: true, ref: 'User'},
     title: {type: String, require: true},
     text: {type: String, require: true},
     color: {type: String, require: true},
@@ -11,8 +12,18 @@ const todolistSchema = new Mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 })
 
+todolistSchema.pre('remove', async function(next) {
+    try {
+        // 일정에 연결된 모든 체크리스트를 삭제
+        await Checklist.deleteMany({ todoId: this._id });
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
 useVirtualId(todolistSchema);
 const Todolist = Mongoose.model('list', todolistSchema);
+
 
 // 모든 리스트를 리턴
 export async function getAll() {
@@ -26,7 +37,7 @@ export async function getAllByUserid(userid) {
 
 // 새로운 To-Do 리스트 생성
 export async function createTodolist({ userid, title, text, color, examDate }) {
-    return new Todolist({ userid, title, text, color, examDate }).save().then(data => data.userid);
+    return new Todolist({ userid, title, text, color, examDate }).save().then(data => data.id);
 }
 
 // To-Do 리스트 업데이트
