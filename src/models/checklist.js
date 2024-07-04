@@ -32,7 +32,7 @@ export async function getAllByUseridnexamDate(userid, examDate) {
 }
 
 // 새로운 Check 리스트 생성
-export async function createCheckList({ userid, color, examDate, list }) {
+export async function createCheckList({ userid, color, examDate, list, completed, todoId}) {
     return new CheckList({ userid, color, examDate, list, completed, todoId }).save().then(data => data.userid);
 }
 
