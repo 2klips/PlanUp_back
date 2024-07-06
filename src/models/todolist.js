@@ -1,6 +1,6 @@
 import Mongoose from 'mongoose';
 import { useVirtualId } from './database.js';
-
+import Checklist from './checklist.js';
 
 // id 자동으로 생성됨 
 const todolistSchema = new Mongoose.Schema({
@@ -12,17 +12,19 @@ const todolistSchema = new Mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 })
 
-todolistSchema.pre('Delete', async function(next) {
+todolistSchema.post('findOneAndDelete', async function(doc) {
     try {
-        // 일정에 연결된 모든 체크리스트를 삭제
-        await Checklist.deleteMany({ todoId: this._id });
-        console.log(`Deleted checklists for todoId: ${this._id}`, result);
-        next();
+        if (doc) {
+            console.log('미들웨어 호출');
+            // 일정에 연결된 모든 체크리스트를 삭제
+            await Checklist.deleteMany({ todoId: doc._id });
+            console.log(`Deleted checklists for todoId: ${doc._id}`);
+        }
     } catch (err) {
-        console.error(`Error deleting checklists for todoId: ${this._id}`, err);
-        next(err);
+        console.error(`Error deleting checklists for todoId: ${doc._id}`, err);
     }
 });
+
 useVirtualId(todolistSchema);
 const Todolist = Mongoose.model('list', todolistSchema);
 
@@ -56,3 +58,5 @@ export async function removeTodolist(_id) {
 
     return Todolist.findByIdAndDelete(_id);
 }
+
+export default Todolist;

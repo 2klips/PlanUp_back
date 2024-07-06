@@ -53,3 +53,6 @@ export async function updateCheckList(_id, { color, examDate, list }) {
 export async function removeCheckList(_id) {
     return CheckList.findByIdAndDelete(_id);
 }
+
+
+export default CheckList;
