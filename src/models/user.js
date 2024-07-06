@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { useVirtualId } from './database.js';
-
+import Todolist from './todolist.js';
 
 const userSchema = new mongoose.Schema({
     name : {type:String,require:true},
@@ -22,10 +22,12 @@ useVirtualId(userSchema)
 const User = mongoose.model('member',userSchema)
 
 
-userSchema.pre('remove', async function(next) {
+userSchema.pre('findOneAndDelete', async function(next) {
     try {
-        // 일정에 연결된 모든 체크리스트를 삭제
-        await Todolist.deleteMany({ userid: this.userid });
+        const doc = await this.model.findOne(this.getQuery());
+        if (doc) {
+            await Todolist.deleteMany({ userid: doc.userid });
+        }
         next();
     } catch (err) {
         next(err);
@@ -48,6 +50,6 @@ export async function createUser(user){
 }
 
 //회원탈퇴
-export async function delete_(userid){
-    return User.deleteOne({userid:userid})
+export async function delete_(userid) {
+    return User.findOneAndDelete({ userid: userid });
 }
