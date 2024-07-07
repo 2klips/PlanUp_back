@@ -1,10 +1,16 @@
 import { Router } from 'express';
 import { spawn } from 'child_process';
 import { isAuth } from '../middlewares/user.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// __dirname 대체 코드
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const router = Router();
 
-const scrapeHandler = (scriptPath) => async (req, res, next) => {
+const scrapeHandler = (scriptPath) => async (req, res) => {
     const { url } = req.body;
     if (!url) {
         return res.status(400).send({ error: 'URL is required' });
@@ -38,6 +44,7 @@ const scrapeHandler = (scriptPath) => async (req, res, next) => {
     });
 };
 
-router.post('/scrape', isAuth, scrapeHandler('C:\\gisan\\kdt3\\backend2\\src\\controllers\\scraper.py'));
+const scriptPath = path.join(__dirname, '../controllers/scraper.py');
+router.post('/scrape', isAuth, scrapeHandler(scriptPath));
 
 export default router;
