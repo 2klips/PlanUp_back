@@ -26,6 +26,10 @@ export async function getAllByUserid(userid) {
     return CheckList.find({ userid }).sort({ completed: 1, createdAt: -1 });
 }
 
+export async function getAllByTodoID(todoId) {
+    return CheckList.find({ todoId }).sort({ completed: 1, createdAt: -1 });
+}
+
 // 해당 아이디와 날짜에 대한 리스트를 리턴
 export async function getAllByUseridnexamDate(userid, examDate) {
     return CheckList.find({ userid, examDate }).sort({ completed: 1, createdAt: -1 });
@@ -49,3 +53,6 @@ export async function updateCheckList(_id, { color, examDate, list }) {
 export async function removeCheckList(_id) {
     return CheckList.findByIdAndDelete(_id);
 }
+
+
+export default CheckList;
