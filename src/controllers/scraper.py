@@ -92,10 +92,16 @@ def get_saramin_job_details(url):
         job_details['근무일시'] = ""
 
     try:
-        closing_date = driver.find_element(By.CSS_SELECTOR, 'span.dday').text.strip()
+        closing_date = driver.find_element(By.XPATH, "//dt[text()='마감일']/following-sibling::dd").text.strip()
         job_details['마감일'] = closing_date
     except:
         job_details['마감일'] = ""
+
+    try:
+        start_date = driver.find_element(By.XPATH, "//dt[text()='시작일']/following-sibling::dd").text.strip()
+        job_details['접수시작일'] = start_date
+    except:
+        job_details['접수시작일'] = ""
 
     try:
         company_info = driver.find_element(By.CSS_SELECTOR, 'h2.jv_title_heading').text.strip()
@@ -480,6 +486,25 @@ def get_jobkorea_job_details(url):
     
     job_details = {"URL": url}
 
+    def get_element_text(xpath, key):
+        try:
+            element = driver.find_element(By.XPATH, xpath)
+            job_details[key] = element.text.strip()
+        except Exception as e:
+            print(f"Error getting {key}: {e}")
+            job_details[key] = ""
+
+    def get_date(date_type):
+        xpath = f"//div[@class='divReadBx']//dl[@class='date']//dt[text()='{date_type}']/following-sibling::dd/span[@class='tahoma']"
+        try:
+            element = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, xpath))
+            )
+            return element.text.strip()
+        except Exception as e:
+            print(f"Error getting {date_type}: {e}")
+            return ''
+
     try:
         company_name = driver.find_element(By.CSS_SELECTOR, 'span.coName').text.strip()
         job_details['회사명'] = company_name
@@ -493,12 +518,19 @@ def get_jobkorea_job_details(url):
         job_details['제목'] = ""
     
     try:
-        date_posted = driver.find_element(By.CLASS_NAME, 'date').text.strip().split(' ')
-        job_details['접수일'] = date_posted[1].strip() 
-        job_details['마감일'] = date_posted[-1].strip()
-    except:
-        job_details['접수일'] = ''
-        job_details['마감일'] = '' 
+        date_elements = driver.find_elements(By.CSS_SELECTOR, "dl.date dt, dl.date dd")
+        for i in range(0, len(date_elements), 2):
+            date_type = date_elements[i].text.strip()
+            date_value = date_elements[i+1].find_element(By.CSS_SELECTOR, "span.tahoma").text.strip()
+            
+            if '시작일' in date_type:
+                job_details['접수시작일'] = date_value
+            elif '마감일' in date_type:
+                job_details['접수마감일'] = date_value
+    except Exception as e:
+        print(f"Error in date crawling: {e}")
+        job_details['접수시작일'] = ''
+        job_details['접수마감일'] = ''
 
     try:
         experience = driver.find_element(By.XPATH, "//dt[text()='경력']/following-sibling::dd").text.strip()
