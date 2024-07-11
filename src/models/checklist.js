@@ -45,8 +45,8 @@ export async function updateCompleted(_id, { completed  }) {
 }
 
 // Check 리스트 업데이트
-export async function updateCheckList(_id, { color, examDate, list }) {
-    return CheckList.findByIdAndUpdate(_id, { color, examDate, list }, { new: true });
+export async function updateCheckList(_id, { color, examDate, list, completed, todoId  }) {
+    return CheckList.findByIdAndUpdate(_id, { color, examDate, list, completed, todoId }, { new: true });
 }
 
 // Check 리스트 삭제
