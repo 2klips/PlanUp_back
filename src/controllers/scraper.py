@@ -597,9 +597,9 @@ def get_jobkorea_job_details(url):
 
     try:
         industry = driver.find_element(By.XPATH, "//dt[text()='산업(업종)']/following-sibling::dd").text.strip()
-        job_details['산업(업종)'] = industry
+        job_details['업종'] = industry
     except:
-        job_details['산업(업종)'] = ""
+        job_details['업종'] = ""
 
     try:
         employee_count = driver.find_element(By.XPATH, "//dt[text()='사원수']/following-sibling::dd/span").text.strip()
