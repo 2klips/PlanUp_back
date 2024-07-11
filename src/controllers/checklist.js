@@ -40,12 +40,12 @@ export async function getUserDateChecklist(req,res,next){
 
 // Check 리스트 업데이트
 export async function updateChecklist(req, res, next) {
-    const { id, color, examDate, list } = req.body;
-    const updatedChecklist = await checklistRepository.updateCheckList(id, { color, examDate, list});
+    const { id, color, examDate, completed, list } = req.body;
+    const updatedChecklist = await checklistRepository.updateCheckList(id, { color, examDate, completed, list});
         if (!updatedChecklist) {
             return res.status(404).json({ message: 'Check 리스트를 찾을 수 없습니다.' });
         }
-        console.log("Check 리스트 업데이트 완료")
+        console.log("Check 리스트 업데이트 완료", updatedChecklist)
         res.status(200).json(updatedChecklist);
 }
 
