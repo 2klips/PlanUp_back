@@ -33,9 +33,29 @@ def save_image(image_url, file_name):
 def get_saramin_job_details(url):
     driver = initialize_driver()
     driver.get(url)
-    wait = WebDriverWait(driver, 30)
-    wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'col')))
     job_details = {"URL": url}
+
+    if url.startswith("https://m."):
+        try:
+            # PC 버전으로 전환
+            pc_version_button = WebDriverWait(driver, 30).until(
+                EC.presence_of_element_located((By.ID, 'go_footer_pcview'))
+            )
+            pc_version_url = pc_version_button.get_attribute('href')
+            driver.execute_script(f"window.open('{pc_version_url}', '_self')")
+
+            # 새로 로딩된 페이지를 기다림
+            WebDriverWait(driver, 30).until(
+                EC.presence_of_element_located((By.CLASS_NAME, 'jv_header'))
+            )
+
+            job_details["URL"] = driver.current_url
+        except Exception as e:
+            print(f"Error during PC version switching or crawling: {e}")
+            job_details["Error"] = str(e)
+    else:
+        wait = WebDriverWait(driver, 30)
+        wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'col')))
 
     try:
         company_name = driver.find_element(By.CSS_SELECTOR, 'div.jv_header a[class="company"]').text.strip()
@@ -184,61 +204,71 @@ def get_worknet_job_details(url):
     try:
         company_name = driver.find_element(By.CSS_SELECTOR, 'div.tit-area p.tit').text.strip()
         job_details['회사명'] = company_name
-    except:
+    except Exception as e:
+        print(f"Error getting 회사명: {e}")
         job_details['회사명'] = ""
 
     try:
         job_title = driver.find_element(By.CSS_SELECTOR, 'div.tit-area p.tit').text.strip()
         job_details['직무'] = job_title
-    except:
+    except Exception as e:
+        print(f"Error getting 직무: {e}")
         job_details['직무'] = ""
 
     try:
         closing_date = driver.find_element(By.CSS_SELECTOR, 'span.d-day').text.strip()
         job_details['마감일'] = closing_date
-    except:
+    except Exception as e:
+        print(f"Error getting 마감일: {e}")
         job_details['마감일'] = ""
 
     try:
         experience = driver.find_element(By.XPATH, "//strong[text()='경력']/following-sibling::span").text.strip()
         job_details['경력'] = experience
-    except:
+    except Exception as e:
+        print(f"Error getting 경력: {e}")
         job_details['경력'] = ""
 
     try:
         education = driver.find_element(By.XPATH, "//strong[text()='학력']/following-sibling::span").text.strip()
         job_details['학력'] = education
-    except:
+    except Exception as e:
+        print(f"Error getting 학력: {e}")
         job_details['학력'] = ""
 
     try:
         location = driver.find_element(By.XPATH, "//strong[text()='지역']/following-sibling::span").text.strip()
         job_details['지역'] = location
-    except:
+    except Exception as e:
+        print(f"Error getting 지역: {e}")
         job_details['지역'] = ""
 
     try:
         salary = driver.find_element(By.XPATH, "//strong[text()='임금']/following-sibling::span").text.strip()
         job_details['임금'] = salary
-    except:
+    except Exception as e:
+        print(f"Error getting 임금: {e}")
         job_details['임금'] = ""
 
     try:
         employment_type = driver.find_element(By.XPATH, "//strong[text()='고용형태']/following-sibling::span").text.strip()
         job_details['고용형태'] = employment_type
-    except:
+    except Exception as e:
+        print(f"Error getting 고용형태: {e}")
         job_details['고용형태'] = ""
 
     try:
         working_type = driver.find_element(By.XPATH, "//strong[text()='근무형태']/following-sibling::span").text.strip()
         job_details['근무형태'] = working_type
-    except:
+    except Exception as e:
+        print(f"Error getting 근무형태: {e}")
         job_details['근무형태'] = ""
 
     try:
         welfare = driver.find_element(By.XPATH, "//p[@class='tit' and text()='복리후생']/following-sibling::div//li").text.strip()
         job_details['복리후생'] = welfare
-    except:
+    except Exception as e:
+        print(f"Error getting 복리후생: {e}")
         job_details['복리후생'] = ""
 
     try:
@@ -246,49 +276,57 @@ def get_worknet_job_details(url):
         job_details['로고이미지'] = logo_image_url
         image_save_message = save_image(logo_image_url, 'worknet_company_logo.png')
         job_details['로고저장결과'] = image_save_message
-    except:
+    except Exception as e:
+        print(f"Error getting 로고이미지: {e}")
         job_details['로고이미지'] = ""
 
     try:
         company_name_additional = driver.find_element(By.XPATH, "//strong[text()='기업명']/following-sibling::div").text.strip()
         job_details['추가_회사명'] = company_name_additional
-    except:
+    except Exception as e:
+        print(f"Error getting 추가_회사명: {e}")
         job_details['추가_회사명'] = ""
 
     try:
         industry_type = driver.find_element(By.XPATH, "//strong[text()='업종']/following-sibling::div").text.strip()
         job_details['업종'] = industry_type
-    except:
+    except Exception as e:
+        print(f"Error getting 업종: {e}")
         job_details['업종'] = ""
 
     try:
         company_size = driver.find_element(By.XPATH, "//strong[text()='기업규모']/following-sibling::div").text.strip()
         job_details['기업규모'] = company_size
-    except:
+    except Exception as e:
+        print(f"Error getting 기업규모: {e}")
         job_details['기업규모'] = ""
 
     try:
         foundation_year = driver.find_element(By.XPATH, "//strong[text()='설립년도']/following-sibling::div").text.strip()
         job_details['설립년도'] = foundation_year
-    except:
+    except Exception as e:
+        print(f"Error getting 설립년도: {e}")
         job_details['설립년도'] = ""
 
     try:
         annual_revenue = driver.find_element(By.XPATH, "//strong[text()='연매출액']/following-sibling::div").text.strip()
         job_details['연매출액'] = annual_revenue
-    except:
+    except Exception as e:
+        print(f"Error getting 연매출액: {e}")
         job_details['연매출액'] = ""
 
     try:
         website = driver.find_element(By.XPATH, "//strong[text()='홈페이지']/following-sibling::div/a").get_attribute('href').strip()
         job_details['홈페이지'] = website
-    except:
+    except Exception as e:
+        print(f"Error getting 홈페이지: {e}")
         job_details['홈페이지'] = ""
 
     try:
         employee_count = driver.find_element(By.XPATH, "//strong[text()='근로자수']/following-sibling::div").text.strip()
         job_details['근로자수'] = employee_count
-    except:
+    except Exception as e:
+        print(f"Error getting 근로자수: {e}")
         job_details['근로자수'] = ""
 
     driver.quit()
@@ -478,6 +516,9 @@ def get_wanted_job_details(url):
     return job_details
 
 def get_jobkorea_job_details(url):
+    if 'm.' in url:
+        url = url.replace('m.', 'www.')
+
     driver = initialize_driver()
     driver.get(url)
     
@@ -513,9 +554,9 @@ def get_jobkorea_job_details(url):
 
     try:
         job_title = driver.find_element(By.CSS_SELECTOR, 'h3.hd_3').text.strip().split('\n')[-1].strip()
-        job_details['제목'] = job_title
+        job_details['직무'] = job_title
     except:
-        job_details['제목'] = ""
+        job_details['직무'] = ""
     
     try:
         date_elements = driver.find_elements(By.CSS_SELECTOR, "dl.date dt, dl.date dd")
@@ -524,13 +565,13 @@ def get_jobkorea_job_details(url):
             date_value = date_elements[i+1].find_element(By.CSS_SELECTOR, "span.tahoma").text.strip()
             
             if '시작일' in date_type:
-                job_details['접수시작일'] = date_value
+                job_details['시작일'] = date_value
             elif '마감일' in date_type:
-                job_details['접수마감일'] = date_value
+                job_details['마감일'] = date_value
     except Exception as e:
         print(f"Error in date crawling: {e}")
-        job_details['접수시작일'] = ''
-        job_details['접수마감일'] = ''
+        job_details['시작일'] = ''
+        job_details['마감일'] = ''
 
     try:
         experience = driver.find_element(By.XPATH, "//dt[text()='경력']/following-sibling::dd").text.strip()
@@ -597,9 +638,9 @@ def get_jobkorea_job_details(url):
 
     try:
         industry = driver.find_element(By.XPATH, "//dt[text()='산업(업종)']/following-sibling::dd").text.strip()
-        job_details['산업(업종)'] = industry
+        job_details['업종'] = industry
     except:
-        job_details['산업(업종)'] = ""
+        job_details['업종'] = ""
 
     try:
         employee_count = driver.find_element(By.XPATH, "//dt[text()='사원수']/following-sibling::dd/span").text.strip()
@@ -628,6 +669,7 @@ def get_jobkorea_job_details(url):
 
     driver.quit()
     return job_details
+
 
 def get_jobplanet_job_details(url):
     driver = initialize_driver()
