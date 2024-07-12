@@ -2,9 +2,9 @@ import * as todolistRepository from '../models/todolist.js';
 
 // 새로운 To-Do 리스트 생성
 export async function createTodolist(req, res, next) {
-    const { userid, title, text, color, examDate } = req.body;
-    console.log( userid, title, text, color, examDate )
-    const newTodolist = await todolistRepository.createTodolist({ userid, title, text, color, examDate });
+    const { userid, title, text, color, examDate, type } = req.body;
+    console.log( userid, title, text, color, examDate, type )
+    const newTodolist = await todolistRepository.createTodolist({ userid, title, text, color, examDate, type});
     console.log("To-Do 리스트 생성 완료")
     res.status(201).json(newTodolist);
 }
