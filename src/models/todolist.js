@@ -9,7 +9,8 @@ const todolistSchema = new Mongoose.Schema({
     text: {type: String, require: true},
     color: {type: String, require: true},
     examDate: { type: Date,  require: true},
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    type: {type: String, default:'0'}
 })
 
 todolistSchema.post('findOneAndDelete', async function(doc) {
@@ -44,8 +45,8 @@ export async function findById(_id) {
 }
 
 // 새로운 To-Do 리스트 생성
-export async function createTodolist({ userid, title, text, color, examDate }) {
-    return new Todolist({ userid, title, text, color, examDate }).save().then(data => data.id);
+export async function createTodolist({ userid, title, text, color, examDate, type }) {
+    return new Todolist({ userid, title, text, color, examDate, type }).save().then(data => data.id);
 }
 
 // To-Do 리스트 업데이트
