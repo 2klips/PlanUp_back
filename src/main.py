@@ -1,12 +1,14 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-import logging
-import os
 import json
+import sys
+import os
+import logging
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
 import controllers.scraper as scraper  # scraper 모듈 임포트
 
 logging.basicConfig(level=logging.INFO)
@@ -65,11 +67,20 @@ async def scrape_job_details(request: URLRequest):
     try:
         if "saramin" in url:
             job_details = scraper.get_saramin_job_details(url)
-        elif "work" in url:
-            if "detail" in url:
+        elif "work.go.kr" in url:
+            if "detail/retrivePriEmpDtlView.do" in url:
+                job_details = scraper.get_worknet_job_details_v3(url)
+            elif "empInfoSrch/detail/empDetailAuthView.do" in url:
                 job_details = scraper.get_worknet_job_details(url)
-            else:
+            elif "empInfoSrch/list/dhsOpenEmpInfoDetail2.do" in url:
                 job_details = scraper.get_worknet_job_details_v2(url)
+            elif "regionJobsWorknet/jobDetailView2.do" in url:
+                if "srchInfotypeNm=OEW" in url:
+                    job_details = scraper.get_worknet_mob_job_details(url)
+                elif "srchInfotypeNm=VALIDATION" in url:
+                    job_details = scraper.get_worknet_mob_job_details_2(url)
+            else:
+                job_details = {"error": "지원되지 않는 Worknet URL입니다."}
         elif "wanted" in url:
             job_details = scraper.get_wanted_job_details(url)
         elif "jobkorea" in url:

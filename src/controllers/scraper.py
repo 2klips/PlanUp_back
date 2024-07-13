@@ -455,6 +455,352 @@ def get_worknet_job_details_v2(url):
 
     return job_details
 
+def get_worknet_job_details_v3(url):
+    driver = initialize_driver()
+    driver.get(url)
+    wait = WebDriverWait(driver, 30)
+    wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'careers-table')))
+    job_details = {"URL": url}
+
+    try:
+        company_name = driver.find_element(By.CSS_SELECTOR, 'p.name').text.strip()
+        job_details['회사명'] = company_name
+    except:
+        job_details['회사명'] = ""
+
+    try:
+        job_title = driver.find_element(By.CSS_SELECTOR, 'p.title').text.strip()
+        job_details['직무'] = job_title
+    except:
+        job_details['직무'] = ""
+
+    try:
+        company_info_table = driver.find_element(By.XPATH, "//table[caption='채용정보 민간기업 기업정보 표']")
+        rows = company_info_table.find_elements(By.TAG_NAME, 'tr')
+        for row in rows:
+            cols = row.find_elements(By.TAG_NAME, 'td')
+            if len(cols) > 1:
+                header = cols[0].text.strip()
+                value = cols[1].text.strip()
+                if '대표자명' in header:
+                    job_details['대표자명'] = value
+                elif '근로자수' in header:
+                    job_details['근로자수'] = value
+                elif '업종명' in header:
+                    job_details['업종명'] = value
+                elif '연매출액' in header:
+                    job_details['연매출액'] = value
+                elif '주소' in header:
+                    job_details['주소'] = value
+    except:
+        pass
+
+    try:
+        logo_image_url = driver.find_element(By.CSS_SELECTOR, 'div.logo-company img').get_attribute('src').strip()
+        job_details['로고이미지'] = logo_image_url
+        image_save_message = save_image(logo_image_url, 'worknet_company_logo.png')
+        job_details['로고저장결과'] = image_save_message
+    except:
+        job_details['로고이미지'] = ""
+
+    try:
+        job_info_table = driver.find_element(By.XPATH, "//table[caption='모집직종, 모집인원, 고용형태, 채용직급, 급여조건, 근무지역 표']")
+        rows = job_info_table.find_elements(By.TAG_NAME, 'tr')
+        for row in rows:
+            cols = row.find_elements(By.TAG_NAME, 'td')
+            if len(cols) > 1:
+                job_details['모집직종'] = cols[0].text.strip()
+                job_details['모집인원'] = cols[1].text.strip()
+                job_details['고용형태'] = cols[2].text.strip()
+                job_details['채용직급'] = cols[3].text.strip()
+                job_details['급여조건'] = cols[4].text.strip()
+                job_details['근무지역'] = cols[5].text.strip()
+    except:
+        pass
+
+    try:
+        job_details['직무내용'] = driver.find_element(By.XPATH, "//table[caption='직무내용']//td").text.strip()
+    except:
+        job_details['직무내용'] = ""
+
+    try:
+        conditions_table = driver.find_element(By.XPATH, "//table[caption='경력조건, 학력 표']")
+        rows = conditions_table.find_elements(By.TAG_NAME, 'tr')
+        for row in rows:
+            cols = row.find_elements(By.TAG_NAME, 'td')
+            if len(cols) > 1:
+                job_details['경력조건'] = cols[0].text.strip()
+                job_details['학력조건'] = cols[1].text.strip()
+    except:
+        pass
+
+    try:
+        application_table = driver.find_element(By.XPATH, "//table[caption='접수방법 , 공고시작일 , 공고마감일 전형방법 표']")
+        rows = application_table.find_elements(By.TAG_NAME, 'tr')
+        for row in rows:
+            cols = row.find_elements(By.TAG_NAME, 'td')
+            if len(cols) > 1:
+                job_details['접수방법'] = cols[0].text.strip()
+                job_details['공고시작일'] = cols[1].text.strip()
+                job_details['공고마감일'] = cols[2].text.strip()
+    except:
+        pass
+
+    driver.quit()
+    return job_details
+
+def get_worknet_mob_job_details(url):
+    driver = initialize_driver()
+    driver.get(url)
+    
+    wait = WebDriverWait(driver, 30)
+    wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'tb_view01_1')))
+    
+    job_details = {"URL": url}
+    
+    try:
+        # 회사 로고 이미지 URL
+        try:
+            logo_img = driver.find_element(By.CSS_SELECTOR, 'p.logo img').get_attribute('src')
+            job_details['회사 로고'] = logo_img
+        except:
+            job_details['회사 로고'] = ""
+
+        # 회사명
+        try:
+            company_name = driver.find_element(By.CSS_SELECTOR, 'strong.ellipsis2').text.strip()
+            job_details['회사명'] = company_name
+        except:
+            job_details['회사명'] = ""
+
+        # 회사 설명
+        try:
+            company_description = driver.find_element(By.CSS_SELECTOR, 'p.ellipsis2').text.strip()
+            job_details['회사 설명'] = company_description
+        except:
+            job_details['회사 설명'] = ""
+
+        # 고용형태
+        try:
+            employment_type = driver.find_element(By.XPATH, "//th[text()='고용형태']/following-sibling::td").text.strip()
+            job_details['고용형태'] = employment_type
+        except:
+            job_details['고용형태'] = ""
+
+        # 공통사항
+        try:
+            common_conditions = driver.find_element(By.XPATH, "//th[text()='공통사항']/following-sibling::td").text.strip()
+            job_details['공통사항'] = common_conditions
+        except:
+            job_details['공통사항'] = ""
+
+        # 근무조건
+        try:
+            work_conditions = driver.find_element(By.XPATH, "//th[text()='근무조건']/following-sibling::td").text.strip()
+            job_details['근무조건'] = work_conditions
+        except:
+            job_details['근무조건'] = ""
+
+        # 채용부문
+        try:
+            recruitment_section = driver.find_element(By.XPATH, "//th[text()='채용부문']/following-sibling::td").text.strip()
+            job_details['채용부문'] = recruitment_section
+        except:
+            job_details['채용부문'] = ""
+
+        # 지원자격
+        try:
+            qualifications = driver.find_element(By.XPATH, "//th[text()='지원자격']/following-sibling::td").text.strip()
+            job_details['지원자격'] = qualifications
+        except:
+            job_details['지원자격'] = ""
+
+        # 근무지
+        try:
+            work_location = driver.find_element(By.XPATH, "//th[text()='근무지']/following-sibling::td").text.strip()
+            job_details['근무지'] = work_location
+        except:
+            job_details['근무지'] = ""
+
+        # 접수기간
+        try:
+            application_period = driver.find_element(By.XPATH, "//th[text()='접수기간']/following-sibling::td").text.strip()
+            job_details['접수기간'] = application_period
+        except:
+            job_details['접수기간'] = ""
+
+        # 접수방법
+        try:
+            application_method = driver.find_element(By.XPATH, "//th[text()='접수방법']/following-sibling::td").text.strip()
+            job_details['접수방법'] = application_method
+        except:
+            job_details['접수방법'] = ""
+
+        # 설립일
+        try:
+            establishment_date = driver.find_element(By.XPATH, "//th[text()='설립일']/following-sibling::td").text.strip()
+            job_details['설립일'] = establishment_date
+        except:
+            job_details['설립일'] = ""
+
+        # 기업규모
+        try:
+            company_size = driver.find_element(By.XPATH, "//th[text()='기업규모']/following-sibling::td").text.strip()
+            job_details['기업규모'] = company_size
+        except:
+            job_details['기업규모'] = ""
+
+        # 매출액
+        try:
+            revenue = driver.find_element(By.XPATH, "//th[text()='매출액']/following-sibling::td").text.strip()
+            job_details['매출액'] = revenue
+        except:
+            job_details['매출액'] = ""
+
+        # 근로자
+        try:
+            employees = driver.find_element(By.XPATH, "//th[text()='근로자']/following-sibling::td").text.strip()
+            job_details['근로자'] = employees
+        except:
+            job_details['근로자'] = ""
+
+        # 업종
+        try:
+            industry = driver.find_element(By.XPATH, "//th[text()='업종']/following-sibling::td").text.strip()
+            job_details['업종'] = industry
+        except:
+            job_details['업종'] = ""
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    
+    driver.quit()
+    return job_details
+
+def get_worknet_mob_job_details_2(url):
+    driver = initialize_driver()
+    driver.get(url)
+    
+    # 페이지가 완전히 로드될 때까지 대기
+    wait = WebDriverWait(driver, 30)
+    try:
+        wait.until(EC.presence_of_element_located((By.ID, 'jobDetailInfo-vue-cont')))
+    except Exception as e:
+        print(f"Initial load error: {e}")
+    
+    job_details = {"URL": url}
+
+    try:
+        # 회사명
+        try:
+            company_name = driver.find_element(By.CSS_SELECTOR, 'div.detail-info-box strong').text.strip()
+            job_details['회사명'] = company_name
+        except Exception as e:
+            print(f"Error extracting 회사명: {e}")
+            job_details['회사명'] = ""
+
+        # 회사 설명
+        try:
+            company_description = driver.find_element(By.CSS_SELECTOR, 'div.detail-info-box p.ellipsis2').text.strip()
+            job_details['회사 설명'] = company_description
+        except Exception as e:
+            print(f"Error extracting 회사 설명: {e}")
+            job_details['회사 설명'] = ""
+
+        # 모집 요강
+        try:
+            recruitment_conditions = driver.find_element(By.XPATH, "//th[text()='경력조건']/following-sibling::td").text.strip()
+            job_details['경력조건'] = recruitment_conditions
+        except Exception as e:
+            print(f"Error extracting 경력조건: {e}")
+            job_details['경력조건'] = ""
+
+        try:
+            academic_background = driver.find_element(By.XPATH, "//th[text()='학력']/following-sibling::td").text.strip()
+            job_details['학력'] = academic_background
+        except Exception as e:
+            print(f"Error extracting 학력: {e}")
+            job_details['학력'] = ""
+
+        try:
+            employment_type = driver.find_element(By.XPATH, "//th[text()='고용형태']/following-sibling::td").text.strip()
+            job_details['고용형태'] = employment_type
+        except Exception as e:
+            print(f"Error extracting 고용형태: {e}")
+            job_details['고용형태'] = ""
+
+        try:
+            number_of_recruits = driver.find_element(By.XPATH, "//th[text()='모집인원']/following-sibling::td").text.strip()
+            job_details['모집인원'] = number_of_recruits
+        except Exception as e:
+            print(f"Error extracting 모집인원: {e}")
+            job_details['모집인원'] = ""
+
+        try:
+            work_location = driver.find_element(By.XPATH, "//th[text()='근무예정지']/following-sibling::td").text.strip()
+            job_details['근무예정지'] = work_location
+        except Exception as e:
+            print(f"Error extracting 근무예정지: {e}")
+            job_details['근무예정지'] = ""
+
+        # 접수 마감일
+        try:
+            application_deadline = driver.find_element(By.XPATH, "//th[text()='접수마감일']/following-sibling::td").text.strip()
+            job_details['접수마감일'] = application_deadline
+        except Exception as e:
+            print(f"Error extracting 접수마감일: {e}")
+            job_details['접수마감일'] = ""
+
+        # 기업 정보
+        try:
+            company_name_info = driver.find_element(By.XPATH, "//th[text()='기업명']/following-sibling::td").text.strip()
+            job_details['기업명'] = company_name_info
+        except Exception as e:
+            print(f"Error extracting 기업명: {e}")
+            job_details['기업명'] = ""
+
+        try:
+            representative_name = driver.find_element(By.XPATH, "//th[text()='대표자명']/following-sibling::td").text.strip()
+            job_details['대표자명'] = representative_name
+        except Exception as e:
+            print(f"Error extracting 대표자명: {e}")
+            job_details['대표자명'] = ""
+
+        try:
+            industry_type = driver.find_element(By.XPATH, "//th[text()='업종']/following-sibling::td").text.strip()
+            job_details['업종'] = industry_type
+        except Exception as e:
+            print(f"Error extracting 업종: {e}")
+            job_details['업종'] = ""
+
+        try:
+            main_business = driver.find_element(By.XPATH, "//th[text()='주요사업']/following-sibling::td").text.strip()
+            job_details['주요사업'] = main_business
+        except Exception as e:
+            print(f"Error extracting 주요사업: {e}")
+            job_details['주요사업'] = ""
+
+        try:
+            number_of_employees = driver.find_element(By.XPATH, "//th[text()='근로자수']/following-sibling::td").text.strip()
+            job_details['근로자수'] = number_of_employees
+        except Exception as e:
+            print(f"Error extracting 근로자수: {e}")
+            job_details['근로자수'] = ""
+
+        try:
+            company_address = driver.find_element(By.XPATH, "//th[text()='회사주소']/following-sibling::td").text.strip()
+            job_details['회사주소'] = company_address
+        except Exception as e:
+            print(f"Error extracting 회사주소: {e}")
+            job_details['회사주소'] = ""
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    
+    driver.quit()
+    return job_details
+
+
 def get_wanted_job_details(url):
     driver = initialize_driver()
     driver.get(url)
@@ -644,7 +990,7 @@ def get_jobkorea_job_details(url):
 
     try:
         employee_count = driver.find_element(By.XPATH, "//dt[text()='사원수']/following-sibling::dd/span").text.strip()
-        job_details['사원수'] = employee_count
+        job_details['사원수'] = ""
     except:
         job_details['사원수'] = ""
 
@@ -669,7 +1015,6 @@ def get_jobkorea_job_details(url):
 
     driver.quit()
     return job_details
-
 
 def get_jobplanet_job_details(url):
     driver = initialize_driver()
@@ -764,11 +1109,20 @@ if __name__ == "__main__":
     url = sys.argv[1]
     if "saramin" in url:
         job_details = get_saramin_job_details(url)
-    elif "work" in url:
-        if "detail" in url:
+    elif "work.go.kr" in url:
+        if "detail/retrivePriEmpDtlView.do" in url:
+            job_details = get_worknet_job_details_v3(url)
+        elif "empInfoSrch/detail/empDetailAuthView.do" in url:
             job_details = get_worknet_job_details(url)
-        else:
+        elif "empInfoSrch/list/dhsOpenEmpInfoDetail2.do" in url:
             job_details = get_worknet_job_details_v2(url)
+        elif "regionJobsWorknet/jobDetailView2.do" in url:
+            if "srchInfotypeNm=OEW" in url:
+                job_details = get_worknet_mob_job_details(url)
+            elif "srchInfotypeNm=VALIDATION" in url:
+                job_details = get_worknet_mob_job_details_2(url)
+        else:
+            job_details = {"error": "지원되지 않는 Worknet URL입니다."}
     elif "wanted" in url:
         job_details = get_wanted_job_details(url)
     elif "jobkorea" in url:
@@ -779,3 +1133,6 @@ if __name__ == "__main__":
         job_details = {"error": "지원되지 않는 URL입니다."}
 
     print(json.dumps(job_details, ensure_ascii=False, indent=4))
+
+
+
