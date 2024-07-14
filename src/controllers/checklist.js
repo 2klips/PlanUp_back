@@ -70,3 +70,11 @@ export async function deleteChecklist(req, res, next) {
         res.status(200).json({ message: 'Check 리스트가 삭제되었습니다.' });
 }
 
+export async function getCount(req, res, next) {
+    const { todoid } = req.params;
+    console.log(todoid);
+    const count = await checklistRepository.getCount(todoid);
+    console.log(count);
+    res.status(200).json({ count });
+}
+

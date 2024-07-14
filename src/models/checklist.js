@@ -54,5 +54,9 @@ export async function removeCheckList(_id) {
     return CheckList.findByIdAndDelete(_id);
 }
 
+export async function getCount(todoId) {
+    return CheckList.countDocuments({ todoId });
+}
+
 
 export default CheckList;
