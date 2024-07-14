@@ -562,9 +562,9 @@ def get_worknet_mob_job_details(url):
         # 회사 로고 이미지 URL
         try:
             logo_img = driver.find_element(By.CSS_SELECTOR, 'p.logo img').get_attribute('src')
-            job_details['회사 로고'] = logo_img
+            job_details['회사로고'] = logo_img
         except:
-            job_details['회사 로고'] = ""
+            job_details['회사로고'] = ""
 
         # 회사명
         try:
@@ -576,9 +576,9 @@ def get_worknet_mob_job_details(url):
         # 회사 설명
         try:
             company_description = driver.find_element(By.CSS_SELECTOR, 'p.ellipsis2').text.strip()
-            job_details['회사 설명'] = company_description
+            job_details['회사설명'] = company_description
         except:
-            job_details['회사 설명'] = ""
+            job_details['회사설명'] = ""
 
         # 고용형태
         try:
@@ -702,10 +702,10 @@ def get_worknet_mob_job_details_2(url):
         # 회사 설명
         try:
             company_description = driver.find_element(By.CSS_SELECTOR, 'div.detail-info-box p.ellipsis2').text.strip()
-            job_details['회사 설명'] = company_description
+            job_details['회사설명'] = company_description
         except Exception as e:
             print(f"Error extracting 회사 설명: {e}")
-            job_details['회사 설명'] = ""
+            job_details['회사설명'] = ""
 
         # 모집 요강
         try:
