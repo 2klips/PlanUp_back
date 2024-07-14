@@ -21,5 +21,6 @@ router.put('/updateCompleted', isAuth, checklistController.updateCompleted);
 
 router.delete('/delete', isAuth, checklistController.deleteChecklist);
 
+router.get('/:todoid/count', isAuth, checklistController.getCount);
 
 export default router;
