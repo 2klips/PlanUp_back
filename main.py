@@ -9,7 +9,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-import controllers.scraper as scraper  # scraper 모듈 임포트
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src', 'controllers'))
+
+import scraper as scraper 
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
