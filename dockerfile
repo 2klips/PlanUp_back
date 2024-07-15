@@ -6,20 +6,18 @@ WORKDIR /usr/src
 
 # 시스템 패키지 업데이트 및 필요한 패키지 설치
 RUN apt-get update && \
-    apt-get install -y wget unzip curl
+    apt-get install -y wget unzip cur && \
+    apt-get install -y chromium
 
-# 크롬 설치
+# Chrome 설치
 RUN wget -O /tmp/chrome-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.126/linux64/chrome-linux64.zip && \
-    mkdir -p /usr/local/chrome && \
-    unzip /tmp/chrome-linux64.zip -d /usr/local/chrome && \
-    ln -s /usr/local/chrome/chrome-linux64/chrome /usr/local/bin/chrome && \
+    unzip /tmp/chrome-linux64.zip -d /usr/local/share/ && \
+    ln -s /usr/local/share/chrome-linux64/chrome /usr/local/bin/google-chrome && \
     rm /tmp/chrome-linux64.zip
 
-# 크롬드라이버 설치
+# ChromeDriver 설치
 RUN wget -O /tmp/chromedriver-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.126/linux64/chromedriver-linux64.zip && \
-    mkdir -p /usr/local/bin && \
-    unzip /tmp/chromedriver-linux64.zip -d /usr/local/bin && \
-    mv /usr/local/bin/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
+    unzip /tmp/chromedriver-linux64.zip -d /usr/local/bin/ && \
     rm /tmp/chromedriver-linux64.zip
 
 # 필요한 Python 패키지 설치
