@@ -22,12 +22,6 @@ export async function signup(req, res, next) {
         password, 
         hp, 
         email, 
-        zoneCode, 
-        address, 
-        addrDetail, 
-        ssn1, 
-        ssn2, 
-        gender
     });
     console.log('회원가입완료')
     res.status(200).json({ message: '회원가입완료', success: true});
@@ -61,9 +55,6 @@ export async function mod_user(req,res,next){
         password : password, 
         hp:hp, 
         email:email, 
-        zoneCode:zoneCode, 
-        address:address, 
-        addrDetail:addrDetail,
     })
 }
 
