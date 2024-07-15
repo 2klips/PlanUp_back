@@ -19,6 +19,9 @@ RUN pip install webdriver-manager
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN mkdir /.wdm && chmod 777 /.wdm
+
+
 # 소스 코드 복사
 COPY . .
 
