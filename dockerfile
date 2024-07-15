@@ -15,8 +15,6 @@ RUN wget -O /tmp/chrome-linux64.deb https://dl.google.com/linux/direct/google-ch
 
 # ChromeDriver 및 WebDriver Manager 설치
 RUN pip install webdriver-manager
-RUN webdriver-manager update
-
 # 필요한 Python 패키지 설치
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
