@@ -9,11 +9,13 @@ RUN apt-get update && \
     apt-get install -y wget unzip curl
 
 # Chrome 설치
-RUN wget -O /tmp/chrome-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.126/linux64/chrome-linux64.zip && \
-    unzip /tmp/chrome-linux64.zip -d /usr/local/share/ && \
-    ln -s /usr/local/share/chrome-linux64/chrome /usr/local/bin/google-chrome && \
-    rm /tmp/chrome-linux64.zip
+RUN wget -O /tmp/chrome-linux64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    dpkg -i /tmp/chrome-linux64.deb; apt-get -fy install && \
+    rm /tmp/chrome-linux64.deb
 
+# ChromeDriver 및 WebDriver Manager 설치
+RUN pip install webdriver-manager
+RUN webdriver-manager update
 
 # 필요한 Python 패키지 설치
 COPY requirements.txt ./
