@@ -14,7 +14,6 @@ router.use('/recruitment', recruitmentRouter);
 router.use('/list', todolistRouter);
 router.use('/checklist', checklistRouter);
 router.use('/certifi', certificateRouter);
-router.use('/scrape', scraperRouters);
 router.use('/jobPostings', jobPostingRouter); // 새로 추가된 라우터 경로
 
 export default router;
