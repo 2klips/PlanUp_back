@@ -14,10 +14,6 @@ RUN wget -O /tmp/chrome-linux64.zip https://storage.googleapis.com/chrome-for-te
     ln -s /usr/local/share/chrome-linux64/chrome /usr/local/bin/google-chrome && \
     rm /tmp/chrome-linux64.zip
 
-# ChromeDriver 설치
-RUN wget -O /tmp/chromedriver-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.126/linux64/chromedriver-linux64.zip && \
-    unzip /tmp/chromedriver-linux64.zip -d /usr/local/bin/ && \
-    rm /tmp/chromedriver-linux64.zip
 
 # 필요한 Python 패키지 설치
 COPY requirements.txt ./
