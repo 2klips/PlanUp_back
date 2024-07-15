@@ -6,7 +6,7 @@ WORKDIR /usr/src
 
 # 시스템 패키지 업데이트 및 필요한 패키지 설치
 RUN apt-get update && \
-    apt-get install -y wget unzip curl chromium-browser
+    apt-get install -y wget unzip curl
 
 # Chrome 설치
 RUN wget -O /tmp/chrome-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.126/linux64/chrome-linux64.zip && \
