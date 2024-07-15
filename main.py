@@ -4,7 +4,6 @@ import os
 import logging
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -49,11 +48,11 @@ def initialize_driver():
     options = Options()
     options.headless = True
     try:
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        driver = webdriver.Chrome(service=Service("/usr/local/bin/chromedriver"), options=options)
     except json.decoder.JSONDecodeError:
         logger.error("Failed to initialize driver, clearing cache and retrying...")
         clear_webdriver_cache()
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        driver = webdriver.Chrome(service=Service("/usr/local/bin/chromedriver"), options=options)
     return driver
 
 @app.post("/scrape")
