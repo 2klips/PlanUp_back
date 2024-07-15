@@ -9,14 +9,18 @@ RUN apt-get update && \
     apt-get install -y wget unzip curl
 
 # 크롬 설치
-RUN wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.110-1_amd64.deb && \
-    apt-get -y install ./google-chrome-stable_114.0.5735.110-1_amd64.deb
+RUN wget -O /tmp/chrome-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.126/linux64/chrome-linux64.zip && \
+    mkdir -p /usr/local/chrome && \
+    unzip /tmp/chrome-linux64.zip -d /usr/local/chrome && \
+    ln -s /usr/local/chrome/chrome-linux64/chrome /usr/local/bin/chrome && \
+    rm /tmp/chrome-linux64.zip
 
 # 크롬드라이버 설치
-RUN wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip && \
+RUN wget -O /tmp/chromedriver-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.126/linux64/chromedriver-linux64.zip && \
     mkdir -p /usr/local/bin && \
-    unzip /tmp/chromedriver.zip -d /usr/local/bin && \
-    rm /tmp/chromedriver.zip
+    unzip /tmp/chromedriver-linux64.zip -d /usr/local/bin && \
+    mv /usr/local/bin/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver && \
+    rm /tmp/chromedriver-linux64.zip
 
 # 필요한 Python 패키지 설치
 COPY requirements.txt ./
