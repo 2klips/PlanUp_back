@@ -6,10 +6,14 @@ WORKDIR /usr/src
 
 # 시스템 패키지 업데이트 및 필요한 패키지 설치
 RUN apt-get update && \
-    apt-get install -y wget unzip curl && \
-    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    apt-get -y install ./google-chrome-stable_current_amd64.deb && \
-    wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip && \
+    apt-get install -y wget unzip curl
+
+# 크롬 설치
+RUN wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.110-1_amd64.deb && \
+    apt-get -y install ./google-chrome-stable_114.0.5735.110-1_amd64.deb
+
+# 크롬드라이버 설치
+RUN wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip && \
     mkdir -p /usr/local/bin && \
     unzip /tmp/chromedriver.zip -d /usr/local/bin && \
     rm /tmp/chromedriver.zip
