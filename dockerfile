@@ -2,27 +2,25 @@
 FROM python:3.10
 
 # 작업 디렉토리 설정
-WORKDIR /usr/src
+WORKDIR /app
 
 # 시스템 패키지 업데이트 및 필요한 패키지 설치
 RUN apt-get update && \
-    apt-get install -y wget unzip cur && \
-    apt-get install -y chromium
+    apt-get install -y wget unzip curl
 
 # Chrome 설치
-RUN wget -O /tmp/chrome-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.126/linux64/chrome-linux64.zip && \
-    unzip /tmp/chrome-linux64.zip -d /usr/local/share/ && \
-    ln -s /usr/local/share/chrome-linux64/chrome /usr/local/bin/google-chrome && \
-    rm /tmp/chrome-linux64.zip
+RUN wget -O /tmp/chrome-linux64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    dpkg -i /tmp/chrome-linux64.deb; apt-get -fy install && \
+    rm /tmp/chrome-linux64.deb
 
-# ChromeDriver 설치
-RUN wget -O /tmp/chromedriver-linux64.zip https://storage.googleapis.com/chrome-for-testing-public/126.0.6478.126/linux64/chromedriver-linux64.zip && \
-    unzip /tmp/chromedriver-linux64.zip -d /usr/local/bin/ && \
-    rm /tmp/chromedriver-linux64.zip
-
+# ChromeDriver 및 WebDriver Manager 설치
+RUN pip install webdriver-manager
 # 필요한 Python 패키지 설치
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
+
+RUN mkdir /.wdm && chmod 777 /.wdm
+
 
 # 소스 코드 복사
 COPY . .
